@@ -1,7 +1,7 @@
 EFIINCS = -I/usr/include/efi -I/usr/include/efi/x86_64 -I/usr/include/efi/protocol
 
 CFLAGS  = $(EFIINCS) -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -DEFI_FUNCTION_WRAPPER -Wall
-LDFLAGS = -nostdlib -znocombreloc -T /usr/lib64/elf_x86_64_efi.lds -shared -Bsymbolic -L /usr/lib64/gnuefi -L /usr/lib64 /usr/lib64/crt0-efi-x86_64.o
+LDFLAGS = -nostdlib -znocombreloc -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymbolic -L /usr/lib/gnuefi -L /usr/lib /usr/lib/crt0-efi-x86_64.o
 
 all: tftptest.efi
 
