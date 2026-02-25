@@ -12,7 +12,7 @@ tftptest.so: tftptest.o
 	ld $(LDFLAGS) $^ -o $@ -lefi -lgnuefi
 
 tftptest.efi: tftptest.so
-	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-x86_64 $^ $@
+	objcopy -j .rodata -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-x86_64 $^ $@
 
 clean:
 	@-rm tftptest.o tftptest.so tftptest.efi 2>/dev/null || true
