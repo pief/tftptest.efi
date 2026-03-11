@@ -32,7 +32,7 @@ commonly used to download a file from the TFTP server,
 `EFI_PXE_BASE_CODE_TFTP_READ_FILE`.
 
 
-## How do I use and what does it do?
+## How do I use it and what does it do?
 
 - Set up a PXE server for testing purposes. This involves:
   - setting up a TFTP server such as *in.tftpd* or *atftpd*. Copy `tftptest.efi`
@@ -54,8 +54,12 @@ commonly used to download a file from the TFTP server,
 What then happens is:
 - *tftptest.efi* will use UEFI firmware calls to determine the network
   device it was booted from and obtain its IP/DHCP/PXE configuration
-- It will prepare a buffer for TFTP download tests. This buffes is
+- It will prepare a buffer for TFTP download tests. This buffer is
   initialized with zeros.
+- It calls the UEFI firmware's `EFI_PXE_BASE_CODE_TFTP_GET_FILE_SIZE`
+  function first to see whether that function was implemented and
+  returns `EFI_SUCCESS`. This is a new side diagnostic feature,
+  a missing implementation won't affect the next test steps.
 - It will then call the UEFI firmware's `EFI_PXE_BASE_CODE_TFTP_READ_FILE`
   function to download itself, i.e. `tftptest.efi`, into the prepared
   buffer. This simply because we KNOW that by the fact of our code
@@ -126,8 +130,20 @@ virt-install --connect qemu:///system \
              --os-variant yourdistro
 ```
 
+
 ## License
 
 This software is licensed under the GNU Public License (GPL), version
 3.0. See [http://www.gnu.org/licenses/gpl-3.0.txt](http://www.gnu.org/licenses/gpl-3.0.txt) or the included file
 `LICENSE`.
+
+
+## Credits
+
+I actually wrote this back in 2020 when testing hardware of a worldwide
+well-known large hardware vendor. My bug report was not only handled
+professionally, my test code was very much appreciated and the UEFI
+firmware fixed. That was a very pleasant experience!
+
+Among other smaller patches Eric Radman contributed a check for the
+`EFI_PXE_BASE_CODE_TFTP_READ_FILE call`. Thank you very much!
