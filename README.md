@@ -99,6 +99,33 @@ is included. You will need to have *gcc* and *gnu-efi* development files
 installed and might have to change the include paths in the `Makefile`.
 
 
+## Virtual testing
+
+Given a working libvirt setup you could `virsh --connect qemu:///system
+net-edit default` and in the `<ip>` block add
+
+```
+  <tftp root='/srv/tftpboot'/>
+  <dhcp>
+    <bootp file='tftptest.efi'/>
+  </dhcp>
+```
+
+Then create a test VM with UEFI boot but secure boot disabled with
+something like this:
+
+```
+virt-install --connect qemu:///system \
+             --name tftptest \
+             --ram 1024 \
+             --vcpus 1 \
+             --disk none
+             --pxe \
+             --network network=default,model=virtio \
+             --boot uefi,firmware.feature0.name=secure-boot,firmware.feature0.enabled=no \
+             --os-variant yourdistro
+```
+
 ## License
 
 This software is licensed under the GNU Public License (GPL), version
