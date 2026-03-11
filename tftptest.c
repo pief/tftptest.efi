@@ -126,6 +126,35 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *system_tab) {
         downloadbuf[4], downloadbuf[5], downloadbuf[6], downloadbuf[7]
     );
 
+    /* Get size of an EXISTING file */
+    Print(
+        L"\nTFTP_GET_FILE_SIZE \"%s\" from %d.%d.%d.%d... ",
+        bootp_bootfile_name,
+        pxe->Mode->DhcpAck.Dhcpv4.BootpSiAddr[0] & 0xff, pxe->Mode->DhcpAck.Dhcpv4.BootpSiAddr[1] & 0xff,
+        pxe->Mode->DhcpAck.Dhcpv4.BootpSiAddr[2] & 0xff, pxe->Mode->DhcpAck.Dhcpv4.BootpSiAddr[3] & 0xff
+    );
+
+    status = uefi_call_wrapper(
+        pxe->Mtftp,                                 // EFI_PXE_BASE_CODE_PROTOCOL function Mtftp
+        10,                                         // 10 arguments following
+        pxe,                                        // IN EFI_PXE_BASE_CODE_PROTOCOL *this
+        EFI_PXE_BASE_CODE_TFTP_GET_FILE_SIZE,       // IN EFI_PXE_BASE_CODE_TFTP_OPCODE
+        NULL,                                       // IN OUT VOID *BufferPtr OPTIONAL
+        FALSE,                                      // IN BOOLEAN Overwrite
+        &downloadbuf_len,                           // IN OUT UINT64 *BufferSize
+        &blocksize,                                 // IN UINTN *BlockSize OPTIONAL
+        pxe->Mode->DhcpAck.Dhcpv4.BootpSiAddr,      // IN EFI_IP_ADDRESS *ServerIp
+        pxe->Mode->DhcpAck.Dhcpv4.BootpBootFile,    // IN CHAR8 *Filename OPTIONAL
+        NULL,                                       // IN EFI_PXE_BASE_CODE_MTFTP_INFO *Info OPTIONAL
+        FALSE                                       // IN BOOLEAN DontUseBuffer
+    );
+    if (status != EFI_SUCCESS) {
+        Print(L"failed to get file size: %r.\n", status);
+    }
+    else {
+        Print(L"EFI_SUCCESS!\n");
+    }
+
     /* Download ourselves, an EXISTING file */
     Print(
         L"\nTFTP_READ_FILE \"%s\" from %d.%d.%d.%d... ",
