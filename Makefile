@@ -1,7 +1,16 @@
+# Check that gnu-efi was installed and try to find library path in distro-agnostic manner
+LIB_DIR = $(dir $(or \
+	$(wildcard /usr/lib64/elf_x86_64_efi.lds),\
+	$(wildcard /usr/lib/elf_x86_64_efi.lds),\
+))
+ifeq ($(LIB_DIR),)
+  $(error elf_x86_64_efi.lds not found in /usr/lib64 and /usr/lib  -- gnu-efi not installed?)
+endif
+
 EFIINCS = -I/usr/include/efi -I/usr/include/efi/x86_64 -I/usr/include/efi/protocol
 
 CFLAGS  = $(EFIINCS) -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -DEFI_FUNCTION_WRAPPER -Wall
-LDFLAGS = -nostdlib -znocombreloc -T /usr/lib64/elf_x86_64_efi.lds -shared -Bsymbolic -L /usr/lib64/gnuefi -L /usr/lib64 /usr/lib64/crt0-efi-x86_64.o
+LDFLAGS = -nostdlib -znocombreloc -T $(LIB_DIR)elf_x86_64_efi.lds -shared -Bsymbolic -L $(LIB_DIR)gnuefi -L $(LIB_DIR) $(LIB_DIR)crt0-efi-x86_64.o
 
 all: tftptest.efi
 
@@ -16,3 +25,5 @@ tftptest.efi: tftptest.so
 
 clean:
 	@-rm tftptest.o tftptest.so tftptest.efi 2>/dev/null || true
+
+
