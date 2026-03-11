@@ -1,7 +1,7 @@
 
 # tftptest.efi
 
-Copyright (c) 2020 Pieter Hollants <pieter@hollants.com>
+Copyright (c) 2020-2026 Pieter Hollants <pieter@hollants.com>
 
 Licensed under the GNU Public License (GPL) version 3
 

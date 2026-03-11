@@ -2,7 +2,7 @@
  * tftptest.efi
  * EFI application to test an UEFI firmware's EFI_PXE_BASE_CODE_TFTP_READ_FILE function
  * 
- * Copyright (c) 2020 by Pieter Hollants <pieter@hollants.com>
+ * Copyright (c) 2020-2026 by Pieter Hollants <pieter@hollants.com>
  * Licensed under the GNU Public License (GPL) version 3
  */
 
